@@ -9,15 +9,20 @@
         .card {
             width: 100px;
             height: 150px;
-            border: 1px solid #000;
+            border: 2px solid #000;
             margin: 10px;
             text-align: center;
             cursor: pointer;
+            transition: border-color 0.3s;
         }
 
         .card img {
             max-width: 100%;
             max-height: 100%;
+        }
+
+        .card.selected {
+            border-color: #00f; /* Border color for selected cards */
         }
     </style>
 </head>
@@ -30,7 +35,7 @@
 <script>
     // JavaScript for the card game
     const cards = [
-        { name: "Your mom", image: "yourmom.jpg" },
+        { name: "Your mom", image: "your_mom_image.jpg" },
         { name: "Your dad", image: "your_dad_image.jpg" },
         { name: "Your friend", image: "your_friend_image.jpg" },
         { name: "Your pet", image: "your_pet_image.jpg" },
@@ -43,6 +48,10 @@
 
     function drawCard(card) {
         alert(`Drawn card: ${card.name}`);
+    }
+
+    function toggleCardSelection(cardElement) {
+        cardElement.classList.toggle("selected");
     }
 
     function initializeGame() {
@@ -60,7 +69,10 @@
         cards.forEach(card => {
             const cardElement = document.createElement("div");
             cardElement.className = "card";
-            cardElement.addEventListener("click", () => drawCard(card));
+            cardElement.addEventListener("click", () => {
+                toggleCardSelection(cardElement);
+                drawCard(card);
+            });
 
             const imageElement = document.createElement("img");
             imageElement.src = card.image;
@@ -73,9 +85,7 @@
 
     // Initialize the game
     initializeGame();
-    &copy; Recorrupt
 </script>
 
 </body>
 </html>
-
