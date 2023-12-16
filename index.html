@@ -101,8 +101,8 @@
 
   function attackLeft() {
     const selectedCards = document.querySelectorAll(".card.selected");
-    if (selectedCards.length < 2) {
-      alert("Please select two cards to attack.");
+    if (selectedCards.length < 1) {
+      alert("Please select one card to attack.");
       return;
     }
 
@@ -130,8 +130,8 @@
 
   function attackRight() {
     const selectedCards = document.querySelectorAll(".card.selected");
-    if (selectedCards.length < 2) {
-      alert("Please select two cards to attack.");
+    if (selectedCards.length < 1) {
+      alert("Please select one cards to attack.");
       return;
     }
 
