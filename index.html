@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastrical Card Game</title>
+    <style>
+        /* Add some basic styling for the cards */
+        .card {
+            width: 100px;
+            height: 150px;
+            border: 1px solid #000;
+            margin: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .card img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <!-- Cards will be dynamically added here -->
+</div>
+
+<script>
+    // JavaScript for the card game
+    const cards = [
+        { name: "Your mom", image: "yourmom.jpg" },
+        { name: "Your dad", image: "your_dad_image.jpg" },
+        { name: "Your friend", image: "your_friend_image.jpg" },
+        { name: "Your pet", image: "your_pet_image.jpg" },
+        { name: "Your sibling", image: "your_sibling_image.jpg" }
+    ];
+
+    function shuffleCards() {
+        cards.sort(() => Math.random() - 0.5);
+    }
+
+    function drawCard(card) {
+        alert(`Drawn card: ${card.name}`);
+    }
+
+    function initializeGame() {
+        shuffleCards();
+        renderCards();
+    }
+
+    function renderCards() {
+        const gameContainer = document.getElementById("game-container");
+
+        // Clear previous cards
+        gameContainer.innerHTML = "";
+
+        // Create and append card elements
+        cards.forEach(card => {
+            const cardElement = document.createElement("div");
+            cardElement.className = "card";
+            cardElement.addEventListener("click", () => drawCard(card));
+
+            const imageElement = document.createElement("img");
+            imageElement.src = card.image;
+            imageElement.alt = card.name;
+
+            cardElement.appendChild(imageElement);
+            gameContainer.appendChild(cardElement);
+        });
+    }
+
+    // Initialize the game
+    initializeGame();
+</script>
+
+</body>
+</html>
 
