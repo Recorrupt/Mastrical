@@ -1,119 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mastrical Card Game</title>
-  <style>
-    /* Add some basic styling for the cards */
-    .card {
-      width: 100px;
-      height: 150px;
-      border: 2px solid #000;
-      margin: 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.3s;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastrical Card Game</title>
+    <style>
+        /* Add some basic styling for the cards */
+        .card-container {
+            display: inline-block;
+            margin: 10px;
+        }
 
-    .card img {
-      max-width: 100%;
-      max-height: 100%;
-    }
+        .card {
+            width: 150px;
+            border: 2px solid #000;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
 
-    .card.selected {
-      border-color: #00f; /* Border color for selected cards */
-    }
+        .card img {
+            max-width: 100%;
+            max-height: 100%;
+        }
 
-    /* Add some styling for the attack buttons */
-    .attack-button {
-      width: 100px;
-      height: 50px;
-      background-color: #00f;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      margin: 10px;
-      cursor: pointer;
-    }
-  </style>
+        .card.selected {
+            border-color: #00f; /* Border color for selected cards */
+        }
+
+        /* Add some styling for the attack buttons */
+        .attack-button {
+            width: 100px;
+            height: 50px;
+            background-color: #00f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        /* Add styling for the health bars */
+        .health-bar {
+            height: 10px;
+            background-color: #0f0;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
 
 <div id="game-container">
-  <img src="yourmom.png"></img>
-  <img src="yourdad.png"></img>
-  <!-- Cards will be dynamically added here -->
+    <!-- Cards will be dynamically added here -->
 </div>
 
 <div id="attack-buttons">
-  <button class="attack-button" id="attack-left">Attack Left</button>
-  <button class="attack-button" id="attack-right">Attack Right</button>
+    <button class="attack-button" id="attack-left">Attack Left</button>
+    <button class="attack-button" id="attack-right">Attack Right</button>
 </div>
 
 <script>
-  // JavaScript for the card game
-  const cards = [
-    { name: "Your mom", image: "yourmom.png", attack: 10 },
-    { name: "Your dad", image: "yourdad.png", attack: 15 },
-  ];
+    // JavaScript for the card game
+    const cards = [
+    { name: "Your mom", image: "yourmom.png", attack: 10, health: 100 },
+    { name: "Your dad", image: "yourdad.png", attack: 8, health: 120 },
+];
 
-  function shuffleCards() {
-    cards.sort(() => Math.random() - 0.5);
-  }
 
-  function drawCard(card) {
-    alert(`Drawn card: ${card.name}`);
-  }
-
-  function toggleCardSelection(cardElement) {
-    const selectedCards = document.querySelectorAll(".card.selected");
-    selectedCards.forEach(selectedCard => {
-      if (selectedCard !== cardElement) {
-        selectedCard.classList.remove("selected");
-      }
-    });
-    cardElement.classList.toggle("selected");
-  }
-
-  function initializeGame() {
-    shuffleCards();
-    renderCards();
-  }
-
-  function renderCards() {
-    const gameContainer = document.getElementById("game-container");
-
-    // Clear previous cards
-    gameContainer.innerHTML = "";
-
-    // Create and append card elements
-    cards.forEach(card => {
-      const cardElement = document.createElement("div");
-      cardElement.className = "card";
-      cardElement.addEventListener("click", () => {
-        toggleCardSelection(cardElement);
-        drawCard(card);
-      });
-
-      const imageElement = document.createElement("img");
-      imageElement.src = card.image;
-      imageElement.alt = card.name;
-
-      cardElement.appendChild(imageElement);
-      gameContainer.appendChild(cardElement);
-    });
-  }
-
-  function attackLeft() {
-    const selectedCard = document.querySelector(".card.selected");
-    if (!selectedCard) {
-      alert("Please select one card to attack.");
-      return;
+    function shuffleCards() {
+        cards.sort(() => Math.random() - 0.5);
     }
 
-    const leftCard = selectedCard;
-    const rightCard = document.querySelector(".card:not(.selected)");
+    function drawCard(card) {
+        alert(`Drawn card: ${card.name}`);
+    }
+
+    function toggleCardSelection(cardElement) {
+        cardElement.classList.toggle("selected");
+    }
+
+    function initializeGame() {
+        shuffleCards();
+        renderCards();
+    }
+
+    function renderCards() {
+        const gameContainer = document.getElementById("game-container");
+
+        // Clear previous cards
+        gameContainer.innerHTML = "";
+
+        // Create and append card elements
+        cards.forEach((card, index) => {
+            const cardContainer = document.createElement("div");
+            cardContainer.className = "card-container";
+            
+            const cardElement = document.createElement("div");
+            cardElement.className = "card";
+            cardElement.addEventListener("click", () => {
+                toggleCardSelection(cardElement);
+                drawCard(card);
+            });
+
+            const imageElement = document.createElement("img");
+            imageElement.src = card.image;
+            imageElement.alt = card.name;
+
+            const healthBar = document.createElement("div");
+            healthBar.className = "health-bar";
+            healthBar.style.width = "100%";
+
+            cardElement.appendChild(imageElement);
+            cardElement.appendChild(healthBar);
+            cardContainer.appendChild(cardElement);
+            gameContainer.appendChild(cardContainer);
+        });
+    }
+
+    function updateHealthBar(cardElement, percentage) {
+        const healthBar = cardElement.querySelector(".health-bar");
+        healthBar.style.width = `${percentage}%`;
+    }
+
+    function attackLeft() {
+    const selectedCards = document.querySelectorAll(".card.selected");
+    if (selectedCards.length < 2) {
+        alert("Please select two cards to attack.");
+        return;
+    }
+
+    const leftCard = selectedCards[0];
+    const rightCard = selectedCards[1];
 
     // Calculate the damage dealt
     const damage = leftCard.attack - rightCard.attack;
@@ -123,26 +140,30 @@
 
     // Check if the right card is still alive
     if (rightCard.health <= 0) {
-      alert(`${rightCard.name} has been defeated!`);
+        alert(`${rightCard.name} has been defeated!`);
 
-      // Remove the right card from the game
-      rightCard.remove();
+        // Remove the right card's container from the game
+        rightCard.parentElement.parentElement.remove();
+    } else {
+        // Update the health bar
+        const percentage = (rightCard.health / 100) * 100;
+        updateHealthBar(rightCard.parentElement, percentage);
     }
 
     // Deselect the cards
     toggleCardSelection(leftCard);
     toggleCardSelection(rightCard);
-  }
+}
 
-  function attackRight() {
-    const selectedCard = document.querySelector(".card.selected");
-    if (!selectedCard) {
-      alert("Please select one card to attack.");
-      return;
+function attackRight() {
+    const selectedCards = document.querySelectorAll(".card.selected");
+    if (selectedCards.length < 2) {
+        alert("Please select two cards to attack.");
+        return;
     }
 
-    const leftCard = document.querySelector(".card:not(.selected)");
-    const rightCard = selectedCard;
+    const leftCard = selectedCards[0];
+    const rightCard = selectedCards[1];
 
     // Calculate the damage dealt
     const damage = rightCard.attack - leftCard.attack;
@@ -152,28 +173,33 @@
 
     // Check if the left card is still alive
     if (leftCard.health <= 0) {
-      alert(`${leftCard.name} has been defeated!`);
+        alert(`${leftCard.name} has been defeated!`);
 
-      // Remove the left card from the game
-      leftCard.remove();
+        // Remove the left card's container from the game
+        leftCard.parentElement.parentElement.remove();
+    } else {
+        // Update the health bar
+        const percentage = (leftCard.health / 100) * 100;
+        updateHealthBar(leftCard.parentElement, percentage);
     }
 
     // Deselect the cards
     toggleCardSelection(leftCard);
     toggleCardSelection(rightCard);
-  }
 
-  // Initialize the game
-  initializeGame();
+    // Initialize the game
+    // Initialize the game
+initializeGame();
 
-  // Add event listeners to the attack buttons
-  const attackLeftButton = document.getElementById("attack-left");
-  attackLeftButton.addEventListener("click", attackLeft);
+// Add event listeners to the attack buttons
+const attackLeftButton = document.getElementById("attack-left");
+attackLeftButton.addEventListener("click", attackLeft);
 
-  const attackRightButton = document.getElementById("attack-right");
-  attackRightButton.addEventListener("click", attackRight);
+const attackRightButton = document.getElementById("attack-right");
+attackRightButton.addEventListener("click", attackRight);
+
+}
 </script>
-  Mastrical Version 1.0
-  &copy; Recorrupt
+&copy; Recorrupt
 </body>
 </html>
