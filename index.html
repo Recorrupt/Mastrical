@@ -67,6 +67,12 @@
   }
 
   function toggleCardSelection(cardElement) {
+    const selectedCards = document.querySelectorAll(".card.selected");
+    selectedCards.forEach(selectedCard => {
+      if (selectedCard !== cardElement) {
+        selectedCard.classList.remove("selected");
+      }
+    });
     cardElement.classList.toggle("selected");
   }
 
@@ -100,14 +106,14 @@
   }
 
   function attackLeft() {
-    const selectedCards = document.querySelectorAll(".card.selected");
-    if (selectedCards.length < 1) {
+    const selectedCard = document.querySelector(".card.selected");
+    if (!selectedCard) {
       alert("Please select one card to attack.");
       return;
     }
 
-    const leftCard = selectedCards[0];
-    const rightCard = selectedCards[1];
+    const leftCard = selectedCard;
+    const rightCard = document.querySelector(".card:not(.selected)");
 
     // Calculate the damage dealt
     const damage = leftCard.attack - rightCard.attack;
@@ -129,14 +135,14 @@
   }
 
   function attackRight() {
-    const selectedCards = document.querySelectorAll(".card.selected");
-    if (selectedCards.length < 1) {
-      alert("Please select one cards to attack.");
+    const selectedCard = document.querySelector(".card.selected");
+    if (!selectedCard) {
+      alert("Please select one card to attack.");
       return;
     }
 
-    const leftCard = selectedCards[0];
-    const rightCard = selectedCards[1];
+    const leftCard = document.querySelector(".card:not(.selected)");
+    const rightCard = selectedCard;
 
     // Calculate the damage dealt
     const damage = rightCard.attack - leftCard.attack;
