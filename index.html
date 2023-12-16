@@ -1,90 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mastrical Card Game</title>
-    <style>
-        /* Add some basic styling for the cards */
-        .card {
-            width: 100px;
-            height: 150px;
-            border: 2px solid #000;
-            margin: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: border-color 0.3s;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mastrical Card Game</title>
+  <style>
+    /* Add some basic styling for the cards */
+    .card {
+      width: 100px;
+      height: 150px;
+      border: 2px solid #000;
+      margin: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
 
-        .card img {
-            max-width: 100%;
-            max-height: 100%;
-        }
+    .card img {
+      max-width: 100%;
+      max-height: 100%;
+    }
 
-        .card.selected {
-            border-color: #00f; /* Border color for selected cards */
-        }
-    </style>
+    .card.selected {
+      border-color: #00f; /* Border color for selected cards */
+    }
+
+    /* Add some styling for the attack buttons */
+    .attack-button {
+      width: 100px;
+      height: 50px;
+      background-color: #00f;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      margin: 10px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
 <div id="game-container">
-    <img src="yourmom.png"></img>
-    <img src="yourdad.png"></img>
-    <!-- Cards will be dynamically added here -->
+  <img src="yourmom.png"></img>
+  <img src="yourdad.png"></img>
+  <!-- Cards will be dynamically added here -->
+</div>
+
+<div id="attack-buttons">
+  <button class="attack-button" id="attack-left">Attack Left</button>
+  <button class="attack-button" id="attack-right">Attack Right</button>
 </div>
 
 <script>
-    // JavaScript for the card game
-    const cards = [
-        { name: "Your mom", image: "yourmom.png" },
-        { name: "Your dad", image: "yourdad.png" },
-    ];
+  // JavaScript for the card game
+  const cards = [
+    { name: "Your mom", image: "yourmom.png", attack: 10 },
+    { name: "Your dad", image: "yourdad.png", attack: 15 },
+  ];
 
-    function shuffleCards() {
-        cards.sort(() => Math.random() - 0.5);
+  function shuffleCards() {
+    cards.sort(() => Math.random() - 0.5);
+  }
+
+  function drawCard(card) {
+    alert(`Drawn card: ${card.name}`);
+  }
+
+  function toggleCardSelection(cardElement) {
+    cardElement.classList.toggle("selected");
+  }
+
+  function initializeGame() {
+    shuffleCards();
+    renderCards();
+  }
+
+  function renderCards() {
+    const gameContainer = document.getElementById("game-container");
+
+    // Clear previous cards
+    gameContainer.innerHTML = "";
+
+    // Create and append card elements
+    cards.forEach(card => {
+      const cardElement = document.createElement("div");
+      cardElement.className = "card";
+      cardElement.addEventListener("click", () => {
+        toggleCardSelection(cardElement);
+        drawCard(card);
+      });
+
+      const imageElement = document.createElement("img");
+      imageElement.src = card.image;
+      imageElement.alt = card.name;
+
+      cardElement.appendChild(imageElement);
+      gameContainer.appendChild(cardElement);
+    });
+  }
+
+  function attackLeft() {
+    const selectedCards = document.querySelectorAll(".card.selected");
+    if (selectedCards.length < 2) {
+      alert("Please select two cards to attack.");
+      return;
     }
 
-    function drawCard(card) {
-        alert(`Drawn card: ${card.name}`);
+    const leftCard = selectedCards[0];
+    const rightCard = selectedCards[1];
+
+    // Calculate the damage dealt
+    const damage = leftCard.attack - rightCard.attack;
+
+    // Update the right card's health
+    rightCard.health -= damage;
+
+    // Check if the right card is still alive
+    if (rightCard.health <= 0) {
+      alert(`${rightCard.name} has been defeated!`);
+
+      // Remove the right card from the game
+      rightCard.remove();
     }
 
-    function toggleCardSelection(cardElement) {
-        cardElement.classList.toggle("selected");
+    // Deselect the cards
+    toggleCardSelection(leftCard);
+    toggleCardSelection(rightCard);
+  }
+
+  function attackRight() {
+    const selectedCards = document.querySelectorAll(".card.selected");
+    if (selectedCards.length < 2) {
+      alert("Please select two cards to attack.");
+      return;
     }
 
-    function initializeGame() {
-        shuffleCards();
-        renderCards();
+    const leftCard = selectedCards[0];
+    const rightCard = selectedCards[1];
+
+    // Calculate the damage dealt
+    const damage = rightCard.attack - leftCard.attack;
+
+    // Update the left card's health
+    leftCard.health -= damage;
+
+    // Check if the left card is still alive
+    if (leftCard.health <= 0) {
+      alert(`${leftCard.name} has been defeated!`);
+
+      // Remove the left card from the game
+      leftCard.remove();
     }
 
-    function renderCards() {
-        const gameContainer = document.getElementById("game-container");
+    // Deselect the cards
+    toggleCardSelection(leftCard);
+    toggleCardSelection(rightCard);
+  }
 
-        // Clear previous cards
-        gameContainer.innerHTML = "";
+  // Initialize the game
+  initializeGame();
 
-        // Create and append card elements
-        cards.forEach(card => {
-            const cardElement = document.createElement("div");
-            cardElement.className = "card";
-            cardElement.addEventListener("click", () => {
-                toggleCardSelection(cardElement);
-                drawCard(card);
-            });
+  // Add event listeners to the attack buttons
+  const attackLeftButton = document.getElementById("attack-left");
+  attackLeftButton.addEventListener("click", attackLeft);
 
-            const imageElement = document.createElement("img");
-            imageElement.src = card.image;
-            imageElement.alt = card.name;
-
-            cardElement.appendChild(imageElement);
-            gameContainer.appendChild(cardElement);
-        });
-    }
-
-    // Initialize the game
-    initializeGame();
+  const attackRightButton = document.getElementById("attack-right");
+  attackRightButton.addEventListener("click", attackRight);
 </script>
-    &copy; Recorrupt
+  &copy; Recorrupt
 </body>
 </html>
