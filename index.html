@@ -108,6 +108,7 @@
             const healthBar = document.createElement("div");
             healthBar.className = "health-bar";
             healthBar.style.width = "100%";
+            healthBar.dataset.initialHealth = card.health;
 
             cardElement.appendChild(imageElement);
             cardElement.appendChild(healthBar);
@@ -148,7 +149,7 @@
             rightCardContainer.remove();
         } else {
             // Update the health bar
-            const percentage = (rightCard.health / 100) * 100;
+            const percentage = (rightCard.health / rightCardContainer.querySelector(".health-bar").dataset.initialHealth) * 100;
             updateHealthBar(rightCardContainer, percentage);
         }
 
@@ -184,7 +185,7 @@
             leftCardContainer.remove();
         } else {
             // Update the health bar
-            const percentage = (leftCard.health / 100) * 100;
+            const percentage = (leftCard.health / leftCardContainer.querySelector(".health-bar").dataset.initialHealth) * 100;
             updateHealthBar(leftCardContainer, percentage);
         }
 
